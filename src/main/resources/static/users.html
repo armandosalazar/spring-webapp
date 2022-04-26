@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: "Trebuchet MS";
+        }
+        table, th, td {
+            border: solid 1px #1e1e1e;
+            padding: 5px;
+            border-collapse: collapse;
+        }
+        table {
+            margin: 30px auto;
+            background-color: #dfdfdf;
+            width: 90vh;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #dfdfdf;
+            padding: 10px;
+        }
+        nav ul {
+            text-align: right;
+        }
+        nav ul li {
+            display: inline-block;
+        }
+        nav ul li a {
+            text-decoration: none;
+            margin-left: 20px;
+            color: #6c6c6c;
+        }
+        .active {
+            color: black;
+        }
+        .button {
+            color: white;
+            background-color: #ed0034;
+            padding: 5px;
+            font-family: "Trebuchet MS";
+            font-size: medium;
+        }
+        .container-user {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1 style="font-size: large">WebApp</h1>
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="register.html">Register</a></li>
+            <li><a href="login.html">Login</a></li>
+            <li><a href="users.html" class="active">Users</a></li>
+        </ul>
+    </nav>
+</header>
+<table>
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Lastname</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Password</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+<div class="container-user">
+    <span id="user-email"></span>
+</div>
+</body>
+<script>
+    async function loadUsers() {
+        const request = await fetch('api/users', {
+            method: 'GET',
+            headers: {
+                'Authorization': localStorage.token
+            }
+        });
+        const users = await request.json();
+        console.log(users);
+        let html = '';
+        let userHtml;
+        let btnDelete = `<input type="button" value="Delete" class="button" onclick="deleteUser();">`;
+        for (let user of users) {
+            let {id, name, lastname, email, phone, password} = user;
+            userHtml = `<tr><td>${id}</td><td>${name}</td><td>${lastname}</td><td>${email}</td><td>${phone}</td><td>${password}</td><td>${btnDelete}</td></tr>`;
+            html += userHtml;
+        }
+        document.querySelector('table tbody').outerHTML = html;
+    }
+    async function deleteUser(id) {
+        if (!window.confirm('Do you want to delete this user?')) {
+            return;
+        }
+        const request = await fetch(`api/users/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': localStorage.token
+            }
+        });
+        window.location.reload();
+    }
+    loadUsers();
+    (() => {
+        document.getElementById('user-email').textContent = window.localStorage.email;
+    })();
+</script>
+</html>

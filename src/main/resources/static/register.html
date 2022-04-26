@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: "Trebuchet MS";
+        }
+        div {
+            margin-top: 30px;
+            text-align: center;
+        }
+        form {
+            display: inline-block;
+            padding: 10px;
+            background-color: #dfdfdf;
+            border-radius: 5px;
+        }
+        form input {
+            font-size: large;
+            font-family: "Trebuchet MS";
+            display: block;
+            margin: 10px auto;
+            padding: 5px;
+            width: 300px;
+        }
+
+        form .button {
+            color: white;
+            background-color: #135aff;
+        }
+        a {
+            text-decoration: none;
+            color: #135aff;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #dfdfdf;
+            padding: 10px;
+        }
+        nav ul {
+            text-align: right;
+        }
+        nav ul li {
+            display: inline-block;
+        }
+        nav ul li a {
+            text-decoration: none;
+            margin-left: 20px;
+            color: #6c6c6c;
+        }
+        .active {
+            color: black;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1 style="font-size: large">WebApp</h1>
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="register.html" class="active">Register</a></li>
+            <li><a href="login.html">Login</a></li>
+            <li><a href="users.html">Users</a></li>
+        </ul>
+    </nav>
+</header>
+<div>
+    <form>
+        <input type="text" placeholder="Name" id="name">
+        <input type="text" placeholder="Lastname" id="lastname">
+        <input type="email" placeholder="Email" id="email">
+        <input type="text" placeholder="Phone" id="phone">
+        <input type="password" placeholder="Password" id="password">
+        <input type="password" placeholder="Repeat Password" id="passwordr">
+        <input type="button" value="Register" class="button" onclick="registerUser();">
+        <a href="login.html" style="font-size: large;">Login</a>
+    </form>
+</div>
+</body>
+<script>
+    async function registerUser() {
+        const data = {
+            name: document.getElementById('name').value,
+            lastname: document.getElementById('lastname').value,
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
+            password: document.getElementById('password').value,
+        };
+        let passwordr = document.getElementById('passwordr').value;
+        if (passwordr != data.password) {
+            window.alert('Passwords do not match');
+            return;
+        }
+        const request = await fetch('api/users', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        window.alert('Account successfully created');
+        window.location.href = 'login.html';
+    }
+</script>
+</html>
