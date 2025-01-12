@@ -1,4 +1,6 @@
 # WebApp with Spring
+---
+> **Note:** Update <version>1.18.30</version> in pom.xml file of lombok for fix the error in the project.
 ___
 ## Description
 Web application and API Rest created with Spring and MySQL as database.
