@@ -2,7 +2,8 @@ package webapp.controllers;
 
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import webapp.dao.UserDAO;
 import webapp.models.User;
@@ -12,10 +13,8 @@ import java.util.List;
 
 @RestController
 public class UserController {
-
-
+    private Logger logger = LoggerFactory.getLogger(UserController.class);
     private final UserDAO userDAO;
-
     private JWTUtil jwtUtil;
 
     public UserController(UserDAO userDAO, JWTUtil jwtUtil) {
@@ -25,6 +24,7 @@ public class UserController {
 
     @GetMapping("/api")
     public String index() {
+        logger.info("Request to /api");
         return "Welcome to the API!";
     }
 
@@ -34,13 +34,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "api/users", method = RequestMethod.GET)
-    public List<String> getUsers(@RequestHeader(value = "Authorization", required = true) String token) {
-        System.out.println("token: " + token);
-        if (token == null) {
-//            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, "No token provided");
-            System.out.println("No token provided");
-            return null;
-        }
+    public List<String> getUsers(@RequestHeader(value = "Authorization") String token) {
 //        if (!verifyToke(toke)) {
 //            return null;
 //        }
@@ -48,9 +42,8 @@ public class UserController {
         return List.of("user1", "user2");
     }
 
-    public boolean verifyToke(String toke) {
-//        return jwtUtil.getKey(toke) != null;
-
+    public boolean verifyToken(String token) {
+//        return jwtUtil.getKey(token) != null;
         return true;
     }
 
@@ -64,7 +57,7 @@ public class UserController {
 
     @RequestMapping(value = "api/users/{id}", method = RequestMethod.DELETE)
     public void deleteUser(@RequestHeader(value = "Authorization") String toke, @PathVariable int id) {
-        if (!verifyToke(toke)) {
+        if (!verifyToken(toke)) {
             return;
         }
         userDAO.deleteUser(id);
