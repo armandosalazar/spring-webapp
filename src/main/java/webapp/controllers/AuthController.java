@@ -12,15 +12,19 @@ import webapp.utils.JWTUtil;
 @RestController
 public class AuthController {
 
-    @Autowired
-    private UserDAO userDAO;
+    private final UserDAO userDAO;
 
-    @Autowired // Automatically applies dependency injection.
-    private JWTUtil jwtUtil;
+    // Automatically applies dependency injection.
+    private final JWTUtil jwtUtil;
+
+    public AuthController(UserDAO userDAO, JWTUtil jwtUtil) {
+        this.userDAO = userDAO;
+        this.jwtUtil = jwtUtil;
+    }
 
     @RequestMapping(path = "api/login", method = RequestMethod.POST)
     public String login(@RequestBody User user) {
-        if(userDAO.verify(user) != null) {
+        if (userDAO.verify(user) != null) {
 //            return jwtUtil.create(String.valueOf(userDAO.verify(user).getId()), userDAO.verify(user).getEmail());
         }
         return "FAIL";
