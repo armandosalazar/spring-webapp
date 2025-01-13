@@ -1,5 +1,6 @@
 package webapp.controller.v1;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
 import org.slf4j.Logger;
@@ -8,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import webapp.dao.UserDAO;
 import webapp.models.User;
+import webapp.repository.UserRepository;
+import webapp.service.UserService;
 import webapp.utils.JWTUtil;
 
 import java.util.List;
@@ -16,12 +19,14 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/users")
 public class UsersController {
-    private Logger logger = LoggerFactory.getLogger(UsersController.class);
+    private final Logger logger = LoggerFactory.getLogger(UsersController.class);
     private final UserDAO userDAO;
+    private final UserService userService;
     private JWTUtil jwtUtil;
 
-    public UsersController(UserDAO userDAO, JWTUtil jwtUtil) {
+    public UsersController(UserDAO userDAO, UserService userService, JWTUtil jwtUtil) {
         this.userDAO = userDAO;
+        this.userService = userService;
         this.jwtUtil = jwtUtil;
     }
 
@@ -30,7 +35,7 @@ public class UsersController {
         return ResponseEntity.ok(userDAO.getUsers());
     }
 
-    @RequestMapping(value = "api/users/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public User getUser(@PathVariable int id) {
         return null;
     }
@@ -50,12 +55,14 @@ public class UsersController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public void registerUser(@RequestBody User user) {
+    public ResponseEntity<User> registerUser(@RequestBody User user) {
         logger.info(user.toString());
-//        Argon2 argon2 = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id);
-//        String hash = argon2.hash(1, 1024, 1, user.getPassword());
-//        user.setPassword(hash);
-        userDAO.registerUser(user);
+
+        String hashed = BCrypt.with(BCrypt.Version.VERSION_2Y).hashToString(6, user.getPassword().toCharArray());
+        user.setPassword(hashed);
+        User userSaved =  userService.save(user);
+
+        return ResponseEntity.ok(userSaved);
     }
 
     @RequestMapping(value = "api/users/{id}", method = RequestMethod.DELETE)

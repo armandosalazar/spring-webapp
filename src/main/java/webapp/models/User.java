@@ -4,33 +4,23 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity // Hibernate
-@Table(name = "users") // Name of table
+@Setter
+@Getter
+@Entity
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto increment
     @Column(name = "id") // Indicates column in table
-    @Getter
-    @Setter
     private int id;
-    @Getter
-    @Setter
     @Column(name = "name")
     private String name;
-    @Getter
-    @Setter
-    @Column(name = "lastName")
+    @Column(name = "last_name")
     private String lastName;
-    @Getter
-    @Setter
     @Column(name = "email")
     private String email;
-    @Getter
-    @Setter
     @Column(name = "phone")
     private String phone;
-    @Getter
-    @Setter
     @Column(name = "password")
     private String password;
 
