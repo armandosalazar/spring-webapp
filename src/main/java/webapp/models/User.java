@@ -3,9 +3,11 @@ package webapp.models;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Setter
 @Getter
+@ToString
 @Entity
 @Table(name = "users")
 public class User {
@@ -23,17 +25,4 @@ public class User {
     private String phone;
     @Column(name = "password")
     private String password;
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                ", phone='" + phone + '\'' +
-                ", password='" + password + '\'' +
-                '}';
-    }
-
 }
