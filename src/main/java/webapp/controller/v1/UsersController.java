@@ -1,31 +1,33 @@
-package webapp.controllers;
+package webapp.controller.v1;
 
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import webapp.dao.UserDAO;
 import webapp.models.User;
 import webapp.utils.JWTUtil;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
-public class UserController {
-    private Logger logger = LoggerFactory.getLogger(UserController.class);
+@RequestMapping("/api/v1/users")
+public class UsersController {
+    private Logger logger = LoggerFactory.getLogger(UsersController.class);
     private final UserDAO userDAO;
     private JWTUtil jwtUtil;
 
-    public UserController(UserDAO userDAO, JWTUtil jwtUtil) {
+    public UsersController(UserDAO userDAO, JWTUtil jwtUtil) {
         this.userDAO = userDAO;
         this.jwtUtil = jwtUtil;
     }
 
-    @GetMapping("/api")
-    public String index() {
-        logger.info("Request to /api");
-        return "Welcome to the API!";
+    @GetMapping
+    public ResponseEntity<List<User>> index() {
+        return ResponseEntity.ok(userDAO.getUsers());
     }
 
     @RequestMapping(value = "api/users/{id}", method = RequestMethod.GET)
