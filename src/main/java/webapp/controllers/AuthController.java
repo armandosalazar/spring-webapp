@@ -21,7 +21,7 @@ public class AuthController {
     @RequestMapping(path = "api/login", method = RequestMethod.POST)
     public String login(@RequestBody User user) {
         if(userDAO.verify(user) != null) {
-            return jwtUtil.create(String.valueOf(userDAO.verify(user).getId()), userDAO.verify(user).getEmail());
+//            return jwtUtil.create(String.valueOf(userDAO.verify(user).getId()), userDAO.verify(user).getEmail());
         }
         return "FAIL";
     }
