@@ -49,11 +49,12 @@ public class UsersController {
         return true;
     }
 
-    @RequestMapping(path = "api/users", method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST)
     public void registerUser(@RequestBody User user) {
-        Argon2 argon2 = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id);
-        String hash = argon2.hash(1, 1024, 1, user.getPassword());
-        user.setPassword(hash);
+        logger.info(user.toString());
+//        Argon2 argon2 = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id);
+//        String hash = argon2.hash(1, 1024, 1, user.getPassword());
+//        user.setPassword(hash);
         userDAO.registerUser(user);
     }
 

@@ -1,9 +1,6 @@
 package webapp.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,9 +8,10 @@ import lombok.Setter;
 @Table(name = "users") // Name of table
 public class User {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto increment
+    @Column(name = "id") // Indicates column in table
     @Getter
     @Setter
-    @Column(name = "id") // Indicates column in table
     private int id;
     @Getter
     @Setter
@@ -35,5 +33,17 @@ public class User {
     @Setter
     @Column(name = "password")
     private String password;
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
 
 }
